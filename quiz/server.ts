@@ -1,4 +1,4 @@
-import  { promises as fsPromises } from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -70,6 +70,20 @@ app.get('/read/usernames', (req: UserRequest, res: Response) => {
   res.send(usernames);
 });
 
+// NEW SERVICE: a route that receives a username via the URI and returns the associated email
+/**
+ * A function that reads the user data from the file and returns the email for a given username
+ */
+app.get('/read/username/:name', addMsgToRequest, (req: UserRequest, res: Response) => {
+  const username = req.params.name;
+  const user = req.users?.find(user => user.username === username);
+  if (user) {
+    res.send({ email: user.email });
+  } else {
+    res.status(404).json({ error: { message: 'User not found', status: 404 } });
+  }
+});
+
 // a middleware function that parses the request body to json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -81,12 +95,12 @@ app.post('/write/adduser', async (req: UserRequest, res: Response) => {
   try {
     let newuser = req.body as User;
     users.push(newuser);
-    
+
     await fsPromises.writeFile(
-      path.resolve(__dirname, dataFile), 
-      JSON.stringify(users)
+        path.resolve(__dirname, dataFile),
+        JSON.stringify(users)
     );
-    
+
     console.log('User Saved');
     res.send('done');
   } catch (err) {
