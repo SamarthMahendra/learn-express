@@ -12,7 +12,9 @@ const dataFile = '../data/users.json';
 
 let users: User[] = [];
 
-// Load users file on startup
+/**
+ * A function that reads the user data from the file
+ */
 async function loadUsers() {
   try {
     const data = await fsPromises.readFile(path.resolve(__dirname, dataFile));
@@ -25,7 +27,12 @@ async function loadUsers() {
 
 loadUsers();
 
-// Middleware to attach the users array to the request object
+/**
+ * A middleware function that attaches the users data to the request object
+ * @param req  the request object
+ * @param res the response object
+ * @param next the next middleware function
+ */
 const attachUsers = (req: Request, res: Response, next: NextFunction) => {
   (req as any).users = users;
   next();

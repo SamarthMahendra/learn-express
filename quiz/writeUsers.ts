@@ -7,7 +7,9 @@ import { User } from './types';
 const router = Router();
 const dataFile = path.resolve(__dirname, '../data/users.json');
 
-// POST /write/adduser — accepts a new user and saves it to the file
+/**
+ * A function that writes the user data to the file
+ */
 router.post('/adduser', async (req: Request, res: Response) => {
     const users: User[] = (req as any).users;
     if (!users) {

@@ -71,6 +71,9 @@ app.get('/read/usernames', (req: UserRequest, res: Response) => {
 });
 
 // NEW SERVICE: a route that receives a username via the URI and returns the associated email
+/**
+ * A function that reads the user data from the file and returns the email for a given username
+ */
 app.get('/read/username/:name', addMsgToRequest, (req: UserRequest, res: Response) => {
   const username = req.params.name;
   const user = req.users?.find(user => user.username === username);

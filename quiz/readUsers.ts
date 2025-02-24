@@ -4,7 +4,9 @@ import { User } from './types';
 
 const router = Router();
 
-// GET /read/usernames — returns all user IDs and usernames
+/**
+ * A function that reads the user data from the file
+ */
 router.get('/usernames', (req: Request, res: Response) => {
     const users: User[] = (req as any).users;
     if (!users) {
@@ -15,6 +17,9 @@ router.get('/usernames', (req: Request, res: Response) => {
 });
 
 // GET /read/username/:name — returns the email for a given username
+/**
+ * A function that reads the user data from the file
+ */
 router.get('/username/:name', (req: Request, res: Response) => {
     const users: User[] = (req as any).users;
     if (!users) {
