@@ -1,4 +1,4 @@
-import  { promises as fsPromises } from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -57,7 +57,7 @@ const addMsgToRequest = (req: UserRequest, res: Response, next: NextFunction) =>
   }
 };
 
-// a middleware function the verifies the origin of the request using a cors package
+// a middleware function that verifies the origin of the request using a cors package
 app.use(cors({ origin: 'http://localhost:3000' }));
 // adds the middleware function to the application
 app.use('/read/usernames', addMsgToRequest);
@@ -68,6 +68,17 @@ app.get('/read/usernames', (req: UserRequest, res: Response) => {
     return { id: user.id, username: user.username };
   });
   res.send(usernames);
+});
+
+// NEW SERVICE: a route that receives a username via the URI and returns the associated email
+app.get('/read/username/:name', addMsgToRequest, (req: UserRequest, res: Response) => {
+  const username = req.params.name;
+  const user = req.users?.find(user => user.username === username);
+  if (user) {
+    res.send({ email: user.email });
+  } else {
+    res.status(404).json({ error: { message: 'User not found', status: 404 } });
+  }
 });
 
 // a middleware function that parses the request body to json
@@ -81,12 +92,12 @@ app.post('/write/adduser', async (req: UserRequest, res: Response) => {
   try {
     let newuser = req.body as User;
     users.push(newuser);
-    
+
     await fsPromises.writeFile(
-      path.resolve(__dirname, dataFile), 
-      JSON.stringify(users)
+        path.resolve(__dirname, dataFile),
+        JSON.stringify(users)
     );
-    
+
     console.log('User Saved');
     res.send('done');
   } catch (err) {
