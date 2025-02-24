@@ -57,7 +57,7 @@ const addMsgToRequest = (req: UserRequest, res: Response, next: NextFunction) =>
   }
 };
 
-// a middleware function that verifies the origin of the request using a cors package
+// a middleware function the verifies the origin of the request using a cors package
 app.use(cors({ origin: 'http://localhost:3000' }));
 // adds the middleware function to the application
 app.use('/read/usernames', addMsgToRequest);
